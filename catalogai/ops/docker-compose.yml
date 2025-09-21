@@ -1,0 +1,56 @@
+services:
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_URL=sqlite:///app.db
+      - THRESH_AUTH=0.15
+      - THRESH_SYN=0.70
+      - MAX_IMAGE_MB=8
+      - LOG_LEVEL=INFO
+    volumes:
+      - backend_data:/app/data
+      - model_artifacts:/app/app/pipeline/artifacts
+    networks:
+      - catalogai_network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE=http://backend:8000
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    networks:
+      - catalogai_network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  backend_data:
+    driver: local
+  model_artifacts:
+    driver: local
+
+networks:
+  catalogai_network:
+    driver: bridge

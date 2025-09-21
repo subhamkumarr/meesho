@@ -1,0 +1,31 @@
+# Debug Dockerfile to see what's happening
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package.json and install ALL dependencies
+COPY package.json ./
+RUN npm install
+
+# Copy all source files
+COPY . .
+
+# Set build environment
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+
+# Try to build and see what happens
+RUN npm run build
+
+# List what was created
+RUN ls -la .next/
+RUN ls -la .next/standalone/ || echo "No standalone directory"
+
+# If standalone exists, run it, otherwise run dev
+CMD if [ -f ".next/standalone/server.js" ]; then \
+      echo "Running production build"; \
+      node .next/standalone/server.js; \
+    else \
+      echo "Running development server"; \
+      npm run dev -- --hostname 0.0.0.0; \
+    fi

@@ -1,0 +1,55 @@
+/* Critical navbar z-index fix */
+nav.glass-strong {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 99999 !important;
+  width: 100% !important;
+}
+
+/* Force all other elements below navbar */
+main, .main-content, div[class*="container"] {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Ensure no element can override navbar */
+* {
+  z-index: auto !important;
+}
+
+nav.glass-strong, nav.glass-strong * {
+  z-index: 99999 !important;
+}
+
+/* Main content spacing */
+.main-content {
+  padding-top: 80px;
+}
+
+@media (max-width: 1024px) {
+  .main-content {
+    padding-top: 64px;
+  }
+}
+
+/* Container responsive */
+.container-responsive {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 1024px) {
+  .container-responsive {
+    padding: 0 2rem;
+  }
+}
+
+/* Body overflow fix */
+body {
+  overflow-x: hidden;
+}

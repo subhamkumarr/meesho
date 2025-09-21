@@ -1,0 +1,42 @@
+/* EMERGENCY NAVBAR Z-INDEX FIX */
+/* This overrides all other z-index conflicts */
+
+/* Force navbar to highest z-index */
+nav[class*="glass-strong"] {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 999999 !important;
+  width: 100vw !important;
+}
+
+/* Reset all other z-indexes */
+body * {
+  z-index: auto !important;
+}
+
+/* Except navbar and its children */
+nav[class*="glass-strong"],
+nav[class*="glass-strong"] * {
+  z-index: 999999 !important;
+}
+
+/* Ensure main content is below */
+main {
+  position: relative !important;
+  z-index: 1 !important;
+  padding-top: 80px !important;
+}
+
+@media (max-width: 1024px) {
+  main {
+    padding-top: 64px !important;
+  }
+}
+
+/* Force container positioning */
+.container-responsive {
+  position: relative !important;
+  z-index: 1 !important;
+}
